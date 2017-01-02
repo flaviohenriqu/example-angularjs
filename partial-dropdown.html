@@ -1,0 +1,23 @@
+<div ng-controller="DropdownController">
+    <table class="table">
+        <thead>
+          <th>Field Name</th>
+          <th>Values</th>
+          <th>Add Values</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="dropdown in dropdowns">
+            <td>{{ dropdown.field_name }}</td>
+            <td>
+               <div class="btn-group">
+                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dropdown<span class="caret"></span></button>
+                 <ul class="dropdown-menu">
+                   <li ng-repeat="value in dropdown.dropdown_values"><a href="#">{{ value.text }}</a></li>
+                 </ul>
+               </div>
+            </td>
+            <td><input id="field_{{ dropdown.id }}" type"text"/><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></td>
+          </tr>
+        </tbody>
+    </table>
+</div>
