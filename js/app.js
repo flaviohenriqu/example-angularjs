@@ -1,12 +1,47 @@
 var recruiterApp = angular.module('recruiterApp', ['ui.router']);
 
-recruiterApp.controller('DropdownController', ['$scope', '$http', function($scope, $http){
-    $scope.dropdowns;
-    $http.get('http://127.0.0.1:8000/api/v1/dropdowns/?format=json').then(function(response) {
-      $scope.dropdowns = response.data;
-  });
+recruiterApp.factory('DropdownService', ['$http', function($http){
+  var service = {
+    allFields: allFields,
+    valuesForField: valuesForField,
+    addValue: addValue
+  }
+  return service;
+
+  function allFields() {
+      return $http.get('http://localhost:8000/api/v1/dropdowns/?format=json');
+  }
+
+  function valuesForField(fieldName) {
+    //
+  }
+
+  function addValue(fieldName, value) {
+    var dataObj = {
+            field_name: fieldName,
+            dropdown_values: [{text: value}],
+    }
+    return $http.post('http://localhost:8000/api/v1/dropdowns/', dataObj)
+  }
 }]);
 
+recruiterApp.controller('DropdownController', ['$scope', 'DropdownService', function($scope, DropdownService){
+    var self = this;
+    $scope.dropdowns;
+
+    self.allFields = function(){
+      DropdownService.allFields().then(function(response){
+        $scope.dropdowns = response.data;
+      });
+    }
+    self.allFields();
+
+    $scope.submit = function(fieldName, id) {
+      console.log('Saving new dropdown value.');
+      var value = angular.element('#field_'+id).val();
+      DropdownService.addValue(fieldName, value).then(self.allFields());
+    }
+}]);
 
 recruiterApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/home');
