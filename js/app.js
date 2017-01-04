@@ -2,6 +2,8 @@ var recruiterApp = angular.module('recruiterApp', ['ui.router']);
 
 recruiterApp.factory('DropdownService', ['$http','$q', '$filter', '$cacheFactory', function($http, $q, $filter, $cacheFactory){
   var values;
+  var dropdownCache = $cacheFactory('dropdownCache');
+
   var service = {
     allFields: allFields,
     valuesForField: valuesForField,
@@ -16,8 +18,7 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', '$cacheFactory
   }
 
   function allFields() {
-    var dropCache = $cacheFactory.get('dropCache');
-    return($http.get('http://localhost:8000/api/v1/dropdowns/?format=json', {cache: dropCache}).then(handleSuccess, handleError));
+    return($http.get('http://localhost:8000/api/v1/dropdowns/?format=json', {cache: true}).then(handleSuccess, handleError));
   }
 
   function addValue(fieldName, value) {
@@ -40,8 +41,11 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', '$cacheFactory
   }
 }]);
 
-recruiterApp.controller('DropdownController', ['$scope', 'DropdownService', function($scope, DropdownService){
+recruiterApp.controller('DropdownController', ['$scope', '$cacheFactory', 'DropdownService', function($scope, $cacheFactory, DropdownService){
     $scope.dropdowns;
+
+    var cache = $cacheFactory.get('dropdownCache');
+    var data = cache.get('dropdownValues');
 
     allFields();
 
@@ -66,12 +70,17 @@ recruiterApp.controller('DropdownController', ['$scope', 'DropdownService', func
     }
 
     function allFields(){
-      DropdownService.allFields()
-        .then(
-              function(values){
-                applyRemoteData(values);
-              }
-            );
+      if(!data){
+        DropdownService.allFields()
+          .then(
+                function(values){
+                  cache.put('dropdownValues', values);
+                  applyRemoteData(values);
+                }
+              );
+      } else {
+        applyRemoteData(data);
+      }
     }
 }]);
 
