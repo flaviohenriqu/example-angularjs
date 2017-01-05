@@ -20,7 +20,7 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', function($http
       return $q.when(allData);
     }
 
-    var request = $http.get('http://localhost:8000/api/v1/dropdowns/?format=json', {cache: true});
+    var request = $http.get('http://localhost:8000/api/v1/dropdowns/?format=json');
 
     return request.then(function(response){
       allData = response.data;
@@ -33,7 +33,10 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', function($http
             field_name: fieldName,
             dropdown_values: [{text: value}],
     }
-    return($http.post('http://localhost:8000/api/v1/dropdowns/', dataObj).then(handleSuccess, handleError))
+    var request = $http.post('http://localhost:8000/api/v1/dropdowns/', dataObj);
+    allData = null;
+
+    return(request.then(handleSuccess, handleError));
   }
 
   function handleError(response){
@@ -48,25 +51,25 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', function($http
   }
 }]);
 
-recruiterApp.controller('DropdownController', ['$scope', 'DropdownService', function($scope, DropdownService){
+recruiterApp.controller('DropdownController', ['$scope', '$state', 'DropdownService', function($scope, $state, DropdownService){
     $scope.dropdowns;
 
     allFields();
 
     $scope.submit = function(fieldName, id) {
       console.log('Saving new dropdown value.');
-      var value = angular.element('#field_'+id).val();
+      var elem = angular.element('#field_'+id);
+      var value = elem.val();
+
       DropdownService.addValue(fieldName, value)
         .then(
-            allFields(),
-            function(errorMessage){
-              console.warn(errorMessage);
-            }
-            );
-    }
-
-    $scope.valuesForField = function(fieldName) {
-      DropdownService.valuesForField(fieldName);
+          function(){
+            $state.go($state.current, {}, {reload: true});
+          },
+          function(errorMessage){
+            console.warn(errorMessage);
+          }
+        );
     }
 
     function applyRemoteData(dropdowns){
@@ -74,13 +77,9 @@ recruiterApp.controller('DropdownController', ['$scope', 'DropdownService', func
     }
 
     function allFields(){
-      DropdownService.allFields()
-        .then(
-              function(values){
-                applyRemoteData(values);
-              }
-            );
+      DropdownService.allFields().then(applyRemoteData);
     }
+
 }]);
 
 recruiterApp.config(function($stateProvider, $urlRouterProvider) {
