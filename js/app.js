@@ -34,7 +34,6 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', function($http
             dropdown_values: [{text: value}],
     }
     var request = $http.post('http://localhost:8000/api/v1/dropdowns/', dataObj);
-    allData = null;
 
     return(request.then(handleSuccess, handleError));
   }
@@ -51,20 +50,22 @@ recruiterApp.factory('DropdownService', ['$http','$q', '$filter', function($http
   }
 }]);
 
-recruiterApp.controller('DropdownController', ['$scope', '$state', 'DropdownService', function($scope, $state, DropdownService){
-    $scope.dropdowns;
-
+recruiterApp.controller('DropdownController', ['$scope', '$filter', 'DropdownService', function($scope, $filter, DropdownService){
+    $scope.DropdownValues = {};
     allFields();
 
     $scope.submit = function(fieldName, id) {
       console.log('Saving new dropdown value.');
-      var elem = angular.element('#field_'+id);
-      var value = elem.val();
+      var value = $scope.DropdownValues[id];
+      $scope.DropdownValues[id] = '';
 
       DropdownService.addValue(fieldName, value)
         .then(
-          function(){
-            $state.go($state.current, {}, {reload: true});
+          function(response){
+            var obj = $filter('filter')($scope.dropdowns, {field_name: response.field_name});
+            var index = $scope.dropdowns.indexOf(obj[0]);
+            var newValue = response.dropdown_values[response.dropdown_values.length - 1];
+            $scope.dropdowns[index].dropdown_values.push(newValue);
           },
           function(errorMessage){
             console.warn(errorMessage);

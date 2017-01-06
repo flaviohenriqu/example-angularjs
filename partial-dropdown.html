@@ -17,7 +17,7 @@
                </div>
             </td>
             <td>
-              <input id="field_{{ dropdown.id }}" type"text"/>
+              <input ng-model="DropdownValues[dropdown.id]" type"text"/>
               <button type="button" ng-click="submit(dropdown.field_name,dropdown.id)" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </td>
           </tr>
