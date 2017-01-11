@@ -14,8 +14,18 @@ app.factory('DropdownDataService', ['$http', '$q', '$filter', 'AppConfig',
     return service;
 
     function valuesForField(fieldName) {
-      var result = $filter('filter')(allData, {field_name: fieldName});
-      return result;
+      var result;
+
+      if(allData){
+        result = $filter('filter')(allData, {field_name: fieldName});
+        return result.dropdown_values;
+      }
+
+      var request = $http.get(AppConfig.API_URL + "/dropdowns/" + fieldName + "/?format=json");
+      return request.then(function(response) {
+        result = response.data.dropdown_values;
+        return result;
+      });
     }
 
     function allFields() {
