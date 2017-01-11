@@ -1,4 +1,4 @@
-<div ng-controller="DropdownController">
+<div ng-controller="DropdownCtrl">
     <table class="table">
         <thead>
           <th>Field Name</th>
@@ -17,8 +17,8 @@
                </div>
             </td>
             <td>
-              <input ng-model="DropdownValues[dropdown.id]" type"text"/>
-              <button type="button" ng-click="submit(dropdown.field_name,dropdown.id)" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+              <input ng-model="dropdown.newValue" type"text"/>
+              <button type="button" ng-click="submit(dropdown)" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </td>
           </tr>
         </tbody>
