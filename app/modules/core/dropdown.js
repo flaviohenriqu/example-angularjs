@@ -2,9 +2,10 @@
 
 var app = angular.module('recruiter-system.core');
 
-app.factory('DropdownDataService', ['$http', '$q', '$filter', 'AppConfig',
-  function($http, $q, $filter, AppConfig) {
+app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
+  function($http, $q, AppConfig) {
     var allData;
+    var dataField;
 
     var service = {
       allFields: allFields,
@@ -16,14 +17,15 @@ app.factory('DropdownDataService', ['$http', '$q', '$filter', 'AppConfig',
     function valuesForField(fieldName) {
       var result;
 
-      if(allData){
-        result = $filter('filter')(allData, {field_name: fieldName});
+      if(dataField){
+        result = $q.when(dataField);
         return result.dropdown_values;
       }
 
       var request = $http.get(AppConfig.API_URL + "/dropdowns/" + fieldName + "/?format=json");
       return request.then(function(response) {
-        result = response.data.dropdown_values;
+        dataField = response.data;
+        result = dataField.dropdown_values;
         return result;
       });
     }
@@ -41,14 +43,21 @@ app.factory('DropdownDataService', ['$http', '$q', '$filter', 'AppConfig',
       });
     }
 
-    function addValue(fieldName, value) {
+    function addValue(dropdown) {
       var dataObj = {
-        field_name: fieldName,
-        dropdown_values: [{text: value}],
+        field_name: dropdown.field_name,
+        dropdown_values: [{text: dropdown.newValue}],
       }
       var request = $http.post(AppConfig.API_URL + "/dropdowns/", dataObj);
 
-      return request.then(handleSuccess, handleError);
+      return request.then(function(response){
+        var data = response.data;
+        var value = data.dropdown_values[data.dropdown_values.length - 1];
+
+        dropdown.dropdown_values.push(value);
+        dropdown.newValue = '';
+        return dropdown;
+      }, handleError);
     }
 
     function handleError(response) {

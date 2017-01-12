@@ -2,22 +2,25 @@
 
 var app = angular.module('recruiter-system.dropdown');
 
-app.controller('DropdownCtrl', ['$scope', 'DropdownDataService',
-  function($scope, DropdownDataService){
+app.controller('DropdownCtrl', ['$scope', 'DropdownDataService', 'toastr',
+  function($scope, DropdownDataService, toastr){
     allFields();
+    $scope.isSaving = false;
 
     $scope.submit = function(dropdown) {
-      DropdownDataService.addValue(dropdown.field_name, dropdown.newValue)
+      $scope.isSaving = true;
+      DropdownDataService.addValue(dropdown)
         .then(
           function(response) {
-            var value = response.dropdown_values[response.dropdown_values.length - 1];
-            dropdown.dropdown_values.push(value);
-            dropdown.newValue = '';
+            dropdown = response;
+            toastr.success('Added with success.');
           },
           function(errorMessage) {
-            concole.warn(errorMessage);
+            console.warn(errorMessage);
+            toastr.error(errorMessage);
           }
         );
+      $scope.isSaving = false;
     }
 
     function applyRemoteData(dropdowns) {

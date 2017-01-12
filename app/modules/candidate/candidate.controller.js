@@ -12,6 +12,8 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
 
     allCandidates();
 
+    $scope.isNewValue = false;
+
     $scope.getTemplate = function(candidate) {
       if(candidate.id === $scope.model.selected.id) return 'edit';
       else if(candidate.id == '') return 'add';
@@ -23,6 +25,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
     }
 
     $scope.addNew = function() {
+      $scope.isNewValue = true;
       $scope.model.candidates.push({id: '', name: '', job_position: '', email: '', country: '', english_level: ''});
     }
 
@@ -32,6 +35,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
           $scope.model.candidates[idx] = response;
         }
       );
+      $scope.isNewValue = false;
     }
     $scope.updateCandidate = function(idx) {
       CandidateDataService.updateCandidate($scope.model.selected).then(

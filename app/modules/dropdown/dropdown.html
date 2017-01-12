@@ -1,4 +1,4 @@
-<div ng-controller="DropdownCtrl">
+<div>
     <table class="table">
         <thead>
           <th>Field Name</th>
@@ -10,15 +10,14 @@
             <td>{{ dropdown.field_name }}</td>
             <td>
                <div class="btn-group">
-                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Dropdown<span class="caret"></span></button>
-                 <ul class="dropdown-menu">
-                   <li ng-repeat="value in dropdown.dropdown_values"><a href="#">{{ value.text }}</a></li>
-                 </ul>
+                 <select class="form-control" ng-disabled="isSaving">
+                   <option ng-repeat="value in dropdown.dropdown_values">{{ value.text }}</option>
+                 </select>
                </div>
             </td>
             <td>
-              <input ng-model="dropdown.newValue" type"text"/>
-              <button type="button" ng-click="submit(dropdown)" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+              <input ng-model="dropdown.newValue" ng-disabled="isSaving" type"text"/>
+              <button type="button" ng-click="submit(dropdown)" ng-disabled="isSaving" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </td>
           </tr>
         </tbody>
