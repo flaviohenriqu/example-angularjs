@@ -18,8 +18,7 @@ app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
       var result;
 
       if(dataField){
-        result = $q.when(dataField);
-        return result.dropdown_values;
+        return $q.when(dataField);
       }
 
       var request = $http.get(AppConfig.API_URL + "/dropdowns/" + fieldName + "/?format=json");
@@ -61,10 +60,10 @@ app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
     }
 
     function handleError(response) {
-      if(!angular.isObject(response.data) || !response.data.message) {
+      if(!angular.isObject(response.data) || !response.data.dropdown_values) {
         return $q.reject("An unknown error occurred.");
       }
-      return $q.reject(response.data.message);
+      return $q.reject(response.data.dropdown_values[0].text[0]);
     }
 
     function handleSuccess(response) {

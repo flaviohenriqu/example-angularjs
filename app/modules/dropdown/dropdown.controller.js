@@ -19,8 +19,9 @@ app.controller('DropdownCtrl', ['$scope', 'DropdownDataService', 'toastr',
             console.warn(errorMessage);
             toastr.error(errorMessage);
           }
-        );
-      $scope.isSaving = false;
+        ).finally(function() {
+          $scope.isSaving = false;
+        });
     }
 
     function applyRemoteData(dropdowns) {
