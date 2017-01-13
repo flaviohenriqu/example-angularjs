@@ -5,10 +5,9 @@ var app = angular.module('recruiter-system.dropdown');
 app.controller('DropdownCtrl', ['$scope', 'DropdownDataService', 'toastr',
   function($scope, DropdownDataService, toastr){
     allFields();
-    $scope.isSaving = false;
 
     $scope.submit = function(dropdown) {
-      $scope.isSaving = true;
+      dropdown.isSaving = true;
       DropdownDataService.addValue(dropdown)
         .then(
           function(response) {
@@ -20,7 +19,7 @@ app.controller('DropdownCtrl', ['$scope', 'DropdownDataService', 'toastr',
             toastr.error(errorMessage);
           }
         ).finally(function() {
-          $scope.isSaving = false;
+          dropdown.isSaving = false;
         });
     }
 
