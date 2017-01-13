@@ -10,7 +10,7 @@
             <td>{{ dropdown.field_name }}</td>
             <td>
                <div class="btn-group">
-                 <select class="form-control" ng-disabled="isSaving">
+                 <select class="form-control" ng-disabled="dropdown.isSaving">
                    <option ng-repeat="value in dropdown.dropdown_values">{{ value.text }}</option>
                  </select>
                </div>
