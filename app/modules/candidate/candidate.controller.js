@@ -2,13 +2,17 @@
 
 var app = angular.module('recruiter-system.candidate');
 
-app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownDataService',
-  function($scope, CandidateDataService, DropdownDataService){
+app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
+        'DropdownDataService', 'toastr',
+  function($scope, CandidateDataService, DropdownDataService, toastr){
     $scope.model = {
       candidates: [],
       selected: {},
       dropdown_values: []
     }
+
+    var dropdowns = ['job_position', 'english_level', 'country'];
+    getDropdownValues(dropdowns);
 
     allCandidates();
 
@@ -22,6 +26,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
 
     $scope.editCandidate = function(candidate) {
       $scope.model.selected = angular.copy(candidate);
+      $scope.isNewValue = true;
     }
 
     $scope.addNew = function() {
@@ -30,24 +35,33 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
     }
 
     $scope.saveCandidate = function(idx, candidate) {
-      CandidateDataService.addCandidate(candidate).then(
-        function(response){
-          $scope.model.candidates[idx] = response;
-        }
-      );
-      $scope.isNewValue = false;
+      if($scope.candidateForm.$valid){
+          CandidateDataService.addCandidate(candidate).then(
+            function(response){
+              $scope.model.candidates[idx] = response;
+              toastr.success('New Candidate added with success.');
+            }
+          ).finally(function() {
+            $scope.isNewValue = false;
+          });
+      }
     }
+
     $scope.updateCandidate = function(idx) {
-      CandidateDataService.updateCandidate($scope.model.selected).then(
-        function(){
-          $scope.model.candidates[idx] = angular.copy($scope.model.selected);
-          $scope.reset();
-        }
-      );
+      if($scope.candidateForm.$valid){
+          CandidateDataService.updateCandidate($scope.model.selected).then(
+            function(){
+              toastr.success('Candidate updated with success.')
+              $scope.model.candidates[idx] = angular.copy($scope.model.selected);
+              $scope.reset();
+            }
+          );
+      }
     }
 
     $scope.reset = function() {
       $scope.model.selected = {};
+      $scope.isNewValue = false;
     }
 
     function applyRemoteData(candidates) {
@@ -58,10 +72,12 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService', 'DropdownData
       CandidateDataService.allCandidates().then(applyRemoteData);
     }
 
-    $scope.getDropdownValues = function(field_name) {
-      DropdownDataService.valuesForField(field_name).then(function(response){
-        $scope.model.dropdown_values[field_name] = response;
-      });
+    function getDropdownValues(dropdowns) {
+        angular.forEach(dropdowns, function(field_name){
+            DropdownDataService.valuesForField(field_name).then(function(response){
+              $scope.model.dropdown_values[field_name] = response;
+            });
+        });
     }
   }
 ]);
