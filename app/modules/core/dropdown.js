@@ -5,7 +5,7 @@ var app = angular.module('recruiter-system.core');
 app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
   function($http, $q, AppConfig) {
     var allData;
-    var dataField;
+    var dataField = [];
 
     var service = {
       allFields: allFields,
@@ -17,14 +17,14 @@ app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
     function valuesForField(fieldName) {
       var result;
 
-      if(dataField){
-        return $q.when(dataField);
+      if(dataField[fieldName]){
+        return $q.when(dataField[fieldName].dropdown_values);
       }
 
       var request = $http.get(AppConfig.API_URL + "/dropdowns/" + fieldName + "/?format=json");
       return request.then(function(response) {
-        dataField = response.data;
-        result = dataField.dropdown_values;
+        dataField[fieldName] = response.data;
+        result = dataField[fieldName].dropdown_values;
         return result;
       });
     }
@@ -54,6 +54,9 @@ app.factory('DropdownDataService', ['$http', '$q', 'AppConfig',
         var value = data.dropdown_values[data.dropdown_values.length - 1];
 
         dropdown.dropdown_values.push(value);
+        if (dropdown.field_name in dataField) {
+            dataField[dropdown.field_name].dropdown_values.push(value);
+        }
         dropdown.newValue = '';
         return dropdown;
       }, handleError);
