@@ -33,17 +33,18 @@
                                         <td>
                                             <input type="email" class="form-control" ng-model="model.selected.email" required/></td>
                                         <td>
-                                            <select class="form-control" ng-model="model.selected.job_position">
-                                            <option ng-selected="model.selected.job_position == item.text" ng-repeat="item in model.dropdown_values['job_position']" ng-value="item.text">{{item.text}}</option>
+                                            <select class="form-control" ng-model="model.selected.job_position" ng-options="obj.text as obj.text for obj in model.dropdown_values['job_position']" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="model.selected.country">
-                                            <option ng-selected="model.selected.country == item.text" ng-repeat="item in model.dropdown_values['country']" ng-value="item.text">{{item.text}}</option>
+                                            <select class="form-control" ng-model="model.selected.country" ng-options="obj.text as obj.text for obj in model.dropdown_values['country']" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-options="obj.text for obj in model.dropdown_values['english_level']" ng-model="model.selected.english_level">
+                                            <select class="form-control" ng-options="obj.text as obj.text for obj in model.dropdown_values['english_level']" ng-model="model.selected.english_level" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>
@@ -58,18 +59,18 @@
                                         <td>
                                             <input type="email" class="form-control" ng-model="candidateDetail.email" required/></td>
                                         <td>
-                                            <select class="form-control" ng-model="candidateDetail.job_position" ng-init="getDropdownValues('job_position')">
-                                            <option ng-selected="candidateDetail.job_position == item.text" ng-repeat="item in model.dropdown_values['job_position']" ng-value="item.text">{{item.text}}</option>
+                                            <select class="form-control" ng-model="candidateDetail.job_position" ng-options="obj.text as obj.text for obj in model.dropdown_values['job_position']" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="candidateDetail.country" ng-init="getDropdownValues('country')">
-                                            <option ng-selected="candidateDetail.country == item.text" ng-repeat="item in model.dropdown_values['country']" ng-value="item.text">{{item.text}}</option>
+                                            <select class="form-control" ng-model="candidateDetail.country" ng-options="objt.text as obj.text for obj in model.dropdown_values['country']" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="candidateDetail.english_level" ng-init="getDropdownValues('english_level')">
-                                            <option ng-selected="candidateDetail.english_level == item.text" ng-repeat="item in model.dropdown_values['english_level']" ng-value="item.text">{{item.text}}</option>
+                                            <select class="form-control" ng-model="candidateDetail.english_level" ng-options="obj.text as obj.text for obj in model.dropdown_values['english_level']" required>
+                                            <option></option>
                                             </select>
                                         </td>
                                         <td>

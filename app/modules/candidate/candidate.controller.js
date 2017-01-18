@@ -49,6 +49,9 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
 
     $scope.updateCandidate = function(idx) {
       if($scope.candidateForm.$valid){
+          //remove optional fields
+          delete $scope.model.selected.comments;
+          delete $scope.model.selected.where_found_us;
           CandidateDataService.updateCandidate($scope.model.selected).then(
             function(){
               toastr.success('Candidate updated with success.')
