@@ -24,8 +24,8 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
     }
 
     $scope.editCandidate = function(candidate) {
-      candidate.selected = true;
       candidate.rollback = angular.copy(candidate);
+      candidate.selected = true;
     }
 
     $scope.addNew = function() {
@@ -34,7 +34,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
     }
 
     $scope.saveCandidate = function(idx, candidate) {
-      if($scope.candidateForm.$valid){
+      if(validateCandidate(candidate)){
           CandidateDataService.addCandidate(candidate).then(
             function(response){
               $scope.model.candidates[idx] = response;
@@ -43,13 +43,11 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
           ).finally(function() {
             $scope.isNewValue = false;
           });
-      } else {
-        toastr.error('All fields are required.');
       }
     }
 
     $scope.updateCandidate = function(candidate) {
-      if($scope.candidateForm.$valid){
+      if(validateCandidate(candidate)){
           var rollback = candidate.rollback;
           //remove optional fields
           delete candidate.rollback;
@@ -59,27 +57,49 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
           CandidateDataService.updateCandidate(candidate).then(
             function(){
               toastr.success('Candidate updated with success.')
-              $scope.reset(candidate);
+              $scope.reset(idx, candidate);
             },
             function(){
               toastr.error('Candidate not updated.');
-              candidate = rollback;
+              $scope.model.candidates[idx] = rollback;
             }
           );
-      } else {
-        toastr.error('All fields are required.');
       }
     }
 
-    $scope.reset = function(candidate) {
+    $scope.reset = function(idx, candidate) {
       candidate.selected = false;
       $scope.isNewValue = false;
+      if('rollback' in candidate) {
+        $scope.model.candidates[idx] = candidate.rollback;
+      }
     }
 
     $scope.resetAdd = function() {
       var idx = $scope.model.candidates.length - 1;
       $scope.model.candidates.splice(idx, 1);
       $scope.isNewValue = false;
+    }
+
+    function validateCandidate(candidate){
+      var field;
+      if(!candidate.name){
+        field = 'Name';
+      } else if(!candidate.email) {
+        field = 'Email';
+      } else if(!candidate.job_position) {
+        field = 'Job Position';
+      } else if(!candidate.country) {
+        field = 'Country';
+      } else if(!candidate.english_level) {
+        field = 'English Level';
+      }
+
+      if(field) {
+        toastr.error(field + ' is required.')
+        return false;
+      }
+      return true;
     }
 
     function applyRemoteData(candidates) {
