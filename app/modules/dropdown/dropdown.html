@@ -1,25 +1,34 @@
-<div>
-    <table class="table">
-        <thead>
-          <th>Field Name</th>
-          <th>Values</th>
-          <th>Add Values</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="dropdown in dropdowns">
-            <td>{{ dropdown.field_name }}</td>
-            <td>
-               <div class="btn-group">
-                 <select class="form-control" ng-disabled="dropdown.isSaving">
-                   <option ng-repeat="value in dropdown.dropdown_values">{{ value.text }}</option>
-                 </select>
-               </div>
-            </td>
-            <td>
-              <input ng-model="dropdown.newValue" ng-disabled="dropdown.isSaving" type"text"/>
-              <button type="button" ng-click="submit(dropdown)" ng-disabled="dropdown.isSaving" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
-            </td>
-          </tr>
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading section-title ng-binding">
+                Dropdowns
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                      <th>Field Name</th>
+                      <th>Values</th>
+                      <th>Add Values</th>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="dropdown in dropdowns">
+                        <td>{{ dropdown.field_name }}</td>
+                        <td>
+                           <div class="btn-group">
+                             <select class="form-control" ng-disabled="dropdown.isSaving">
+                               <option ng-repeat="value in dropdown.dropdown_values">{{ value.text }}</option>
+                             </select>
+                           </div>
+                        </td>
+                        <td>
+                          <input ng-model="dropdown.newValue" ng-disabled="dropdown.isSaving" type"text"/>
+                          <button type="button" ng-click="submit(dropdown)" ng-disabled="dropdown.isSaving" class="btn btn-success"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
