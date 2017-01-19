@@ -46,7 +46,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
       }
     }
 
-    $scope.updateCandidate = function(candidate) {
+    $scope.updateCandidate = function(idx, candidate) {
       if(validateCandidate(candidate)){
           var rollback = candidate.rollback;
           //remove optional fields
@@ -69,7 +69,6 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
 
     $scope.reset = function(idx, candidate) {
       candidate.selected = false;
-      $scope.isNewValue = false;
       if('rollback' in candidate) {
         $scope.model.candidates[idx] = candidate.rollback;
       }
@@ -82,21 +81,29 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
     }
 
     function validateCandidate(candidate){
-      var field;
+      var field = [];
       if(!candidate.name){
-        field = 'Name';
-      } else if(!candidate.email) {
-        field = 'Email';
-      } else if(!candidate.job_position) {
-        field = 'Job Position';
-      } else if(!candidate.country) {
-        field = 'Country';
-      } else if(!candidate.english_level) {
-        field = 'English Level';
+        field.push('Name');
+      }
+      if(!candidate.email) {
+        field.push('Email');
+      }
+      if(!candidate.job_position) {
+        field.push('Job Position');
+      }
+      if(!candidate.country) {
+        field.push('Country');
+      }
+      if(!candidate.english_level) {
+        field.push('English Level');
       }
 
-      if(field) {
-        toastr.error(field + ' is required.')
+      if(field.length) {
+        var msg = '';
+        angular.forEach(field, function(value){
+            msg = value + " is required.\n"
+            toastr.warning(msg, 'Warning');
+        });
         return false;
       }
       return true;
