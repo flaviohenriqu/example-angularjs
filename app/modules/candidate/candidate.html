@@ -29,27 +29,27 @@
                                   </script>
                                   <script type="text/ng-template" id="edit">
                                         <td>
-                                            <input type="text" class="form-control" ng-model="model.selected.name" required/></td>
+                                            <input type="text" class="form-control" ng-model="candidateDetail.name" required/></td>
                                         <td>
-                                            <input type="email" class="form-control" ng-model="model.selected.email" required/></td>
+                                            <input type="email" class="form-control" ng-model="candidateDetail.email" required/></td>
                                         <td>
-                                            <select class="form-control" ng-model="model.selected.job_position" ng-options="obj.text as obj.text for obj in model.dropdown_values['job_position']" required>
+                                            <select class="form-control" ng-model="candidateDetail.job_position" ng-options="obj.text as obj.text for obj in model.dropdown_values['job_position']" required>
                                             <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="model.selected.country" ng-options="obj.text as obj.text for obj in model.dropdown_values['country']" required>
+                                            <select class="form-control" ng-model="candidateDetail.country" ng-options="obj.text as obj.text for obj in model.dropdown_values['country']" required>
                                             <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-options="obj.text as obj.text for obj in model.dropdown_values['english_level']" ng-model="model.selected.english_level" required>
+                                            <select class="form-control" ng-options="obj.text as obj.text for obj in model.dropdown_values['english_level']" ng-model="candidateDetail.english_level" required>
                                             <option></option>
                                             </select>
                                         </td>
                                         <td>
-                                          <button type="submit" class="btn btn-default" aria-label="Left Align" ng-click="updateCandidate($index)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-                                          <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="reset()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                          <button type="submit" class="btn btn-default" aria-label="Left Align" ng-click="updateCandidate(candidateDetail)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                                          <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="reset(candidateDetail)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                                         </td>
                                   </script>
 
@@ -64,7 +64,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control" ng-model="candidateDetail.country" ng-options="objt.text as obj.text for obj in model.dropdown_values['country']" required>
+                                            <select class="form-control" ng-model="candidateDetail.country" ng-options="obj.text as obj.text for obj in model.dropdown_values['country']" required>
                                             <option></option>
                                             </select>
                                         </td>
@@ -75,6 +75,7 @@
                                         </td>
                                         <td>
                                           <button type="submit" class="btn btn-default" aria-label="Left Align" ng-click="saveCandidate($index, candidateDetail)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                                          <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="resetAdd()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                                         </td>
                                   </script>
                                 </tbody>

@@ -7,7 +7,6 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
   function($scope, CandidateDataService, DropdownDataService, toastr){
     $scope.model = {
       candidates: [],
-      selected: {},
       dropdown_values: []
     }
 
@@ -19,14 +18,14 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
     $scope.isNewValue = false;
 
     $scope.getTemplate = function(candidate) {
-      if(candidate.id === $scope.model.selected.id) return 'edit';
+      if(candidate.selected) return 'edit';
       else if(candidate.id == '') return 'add';
       else return 'display';
     }
 
     $scope.editCandidate = function(candidate) {
-      $scope.model.selected = angular.copy(candidate);
-      $scope.isNewValue = true;
+      candidate.selected = true;
+      candidate.rollback = angular.copy(candidate);
     }
 
     $scope.addNew = function() {
@@ -44,26 +43,42 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
           ).finally(function() {
             $scope.isNewValue = false;
           });
+      } else {
+        toastr.error('All fields are required.');
       }
     }
 
-    $scope.updateCandidate = function(idx) {
+    $scope.updateCandidate = function(candidate) {
       if($scope.candidateForm.$valid){
+          var rollback = candidate.rollback;
           //remove optional fields
-          delete $scope.model.selected.comments;
-          delete $scope.model.selected.where_found_us;
-          CandidateDataService.updateCandidate($scope.model.selected).then(
+          delete candidate.rollback;
+          delete candidate.selected;
+          delete candidate.comments;
+          delete candidate.where_found_us;
+          CandidateDataService.updateCandidate(candidate).then(
             function(){
               toastr.success('Candidate updated with success.')
-              $scope.model.candidates[idx] = angular.copy($scope.model.selected);
-              $scope.reset();
+              $scope.reset(candidate);
+            },
+            function(){
+              toastr.error('Candidate not updated.');
+              candidate = rollback;
             }
           );
+      } else {
+        toastr.error('All fields are required.');
       }
     }
 
-    $scope.reset = function() {
-      $scope.model.selected = {};
+    $scope.reset = function(candidate) {
+      candidate.selected = false;
+      $scope.isNewValue = false;
+    }
+
+    $scope.resetAdd = function() {
+      var idx = $scope.model.candidates.length - 1;
+      $scope.model.candidates.splice(idx, 1);
       $scope.isNewValue = false;
     }
 

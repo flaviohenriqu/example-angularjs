@@ -15,7 +15,7 @@ app.factory('CandidateDataService', ['$http', '$q', 'AppConfig',
 
     function allCandidates(){
       if(allData){
-        $q.when(allData);
+        return $q.when(allData);
       }
 
       var request = $http.get(AppConfig.API_URL + "/candidates/?format=json");
@@ -27,14 +27,7 @@ app.factory('CandidateDataService', ['$http', '$q', 'AppConfig',
     }
 
     function addCandidate(candidate) {
-      var data = {
-        name: candidate.name,
-        email: candidate.email,
-        job_position: candidate.job_position,
-        country: candidate.country,
-        english_level: candidate.english_level
-      }
-      var request = $http.post(AppConfig.API_URL + "/candidates/", data);
+      var request = $http.post(AppConfig.API_URL + "/candidates/", candidate);
 
       return request.then(handleSuccess, handleError);
     }
