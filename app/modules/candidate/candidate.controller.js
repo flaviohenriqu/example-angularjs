@@ -31,7 +31,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
       $scope.model.newCandidate = {id: '', name: '', job_position: '', email: '', country: '', english_level: ''};
     }
 
-    $scope.saveCandidate = function(idx, candidate) {
+    $scope.saveCandidate = function(candidate) {
       if(validateCandidate(candidate)){
           CandidateDataService.addCandidate(candidate).then(
             function(){
