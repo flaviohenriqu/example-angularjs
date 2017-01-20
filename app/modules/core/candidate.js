@@ -29,7 +29,10 @@ app.factory('CandidateDataService', ['$http', '$q', 'AppConfig',
     function addCandidate(candidate) {
       var request = $http.post(AppConfig.API_URL + "/candidates/", candidate);
 
-      return request.then(handleSuccess, handleError);
+      return request.then(function(response){
+        allData.push(response.data);
+        return response.data;
+      }, handleError);
     }
 
     function updateCandidate(candidate) {

@@ -7,7 +7,8 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
   function($scope, CandidateDataService, DropdownDataService, toastr){
     $scope.model = {
       candidates: [],
-      dropdown_values: []
+      dropdown_values: [],
+      newCandidate: {}
     }
 
     var dropdowns = ['job_position', 'english_level', 'country'];
@@ -17,7 +18,6 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
 
     $scope.getTemplate = function(candidate) {
       if(candidate.selected) return 'edit';
-      else if(candidate.id == '') return 'add';
       else return 'display';
     }
 
@@ -28,14 +28,13 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
 
     $scope.addNew = function() {
       $scope.isNewValue = true;
-      $scope.model.candidates.push({id: '', name: '', job_position: '', email: '', country: '', english_level: ''});
+      $scope.model.newCandidate = {id: '', name: '', job_position: '', email: '', country: '', english_level: ''};
     }
 
     $scope.saveCandidate = function(idx, candidate) {
       if(validateCandidate(candidate)){
           CandidateDataService.addCandidate(candidate).then(
-            function(response){
-              $scope.model.candidates[idx] = response;
+            function(){
               toastr.success('New Candidate added with success.');
             }
           ).finally(function() {
@@ -73,8 +72,7 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
     }
 
     $scope.resetAdd = function() {
-      var idx = $scope.model.candidates.length - 1;
-      $scope.model.candidates.splice(idx, 1);
+      $scope.model.newCandidate = {};
       $scope.isNewValue = false;
     }
 
@@ -107,22 +105,12 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
       return true;
     }
 
-    function checkAdd() {
-      var idx = $scope.model.candidates.length - 1;
-      if(!$scope.model.candidates[idx].id) {
-        $scope.isNewValue = true;
-      }
-    }
-
     function applyRemoteData(candidates) {
       $scope.model.candidates = candidates;
     }
 
     function allCandidates() {
-      CandidateDataService.allCandidates().then(applyRemoteData).finally(
-      function(){
-        checkAdd();
-      });
+      CandidateDataService.allCandidates().then(applyRemoteData);
     }
 
     function getDropdownValues(dropdowns) {
