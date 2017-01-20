@@ -15,8 +15,6 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
 
     allCandidates();
 
-    $scope.isNewValue = false;
-
     $scope.getTemplate = function(candidate) {
       if(candidate.selected) return 'edit';
       else if(candidate.id == '') return 'add';
@@ -109,12 +107,22 @@ app.controller('CandidateCtrl', ['$scope', 'CandidateDataService',
       return true;
     }
 
+    function checkAdd() {
+      var idx = $scope.model.candidates.length - 1;
+      if(!$scope.model.candidates[idx].id) {
+        $scope.isNewValue = true;
+      }
+    }
+
     function applyRemoteData(candidates) {
       $scope.model.candidates = candidates;
     }
 
     function allCandidates() {
-      CandidateDataService.allCandidates().then(applyRemoteData);
+      CandidateDataService.allCandidates().then(applyRemoteData).finally(
+      function(){
+        checkAdd();
+      });
     }
 
     function getDropdownValues(dropdowns) {
